@@ -1,0 +1,27 @@
+instalar node
+instalar extensões code
+    tema dracula
+    material icon
+configurar mongoDB
+    criar conta
+    criar cluster
+    criar usuario data base
+instalar insomnia.rest
+    insomnia core
+iniciando projeto
+    terminal
+        mkdir beckend
+        cd beckend
+        npm init -y (cria arquivo package.json)
+criar pasta src
+    dentro dela o arquivo index.js
+instalar dependencia express
+    npm install express
+escrevendo arquivo index.js
+installar nodemon
+    npm install nodemon -D
+criar script dev
+instalar dependencia mongoose para fazer conexão com o banco de dados
+    npm install mongoose
+instalar o cors pra conversar duas portas,front e back
+    
