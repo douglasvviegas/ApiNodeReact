@@ -39,7 +39,9 @@ li.notepad-infos-priority textarea {
     resize: none;
 }
 
-
+li.notepad-infos-priority textarea:hover{
+    cursor: default;
+}
 
 li.notepad-infos-priority span{
     color: #c4c4c4;

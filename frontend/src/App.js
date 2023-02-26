@@ -12,44 +12,92 @@ import RadioButton from "./components/RadioButton";
 
 
 function App() {
+  const [selectedValue, setSelectedValue] = useState('all');
   const [title, setTitles] = useState('');
   const [notes, setNotes] = useState('');
   const [allNotes, setAllNotes] = useState([]);
+
   useEffect(() => {
-    async function getAllNotes(){
-      const response = await api.get('/annotations',);
+    getAllNotes();
+  }, [])
 
-      setAllNotes(response.data)
+  async function getAllNotes() {
+    const response = await api.get('/annotations',);
+
+    setAllNotes(response.data);
+  }
+
+  async function loadNotes(option) {
+    const params = { priority: option };
+    const response = await api.get('/priorities', { params });
+
+    if (response) {
+      setAllNotes(response.data);
     }
-    getAllNotes()
-  },[])
+  }
 
-  async function handleSubmit(e){
+  async function handleChange(e) {
+    setSelectedValue(e.value);
+
+    if (e.checked && e.value !== 'all') {
+      loadNotes(e.value);
+    } else {
+      getAllNotes();
+    }
+  }
+
+  async function handleDelete(id) {
+    const deletedNote = await api.delete(`/annotations/${id}`);
+
+    if (deletedNote) {
+      setAllNotes(allNotes.filter(note => note._id !== id));
+    }
+  }
+
+  async function handleChangePriority(id) {
+    const note = await api.post(`/priorities/${id}`);
+
+    if (note && selectedValue !== 'all') {
+      loadNotes(selectedValue);
+    } else if(note){
+      getAllNotes();
+    }
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    
-    const response = await api.post('/annotations',{
+
+    const response = await api.post('/annotations', {
       title,
       notes,
       priority: false
     })
-    
+
     setTitles('');
     setNotes('');
 
-    setAllNotes([...allNotes, response.data])
+    if(selectedValue !== 'all'){
+      getAllNotes();
+    } else {
+      setAllNotes([...allNotes, response.data]);
+
+    }
+
+    setSelectedValue('all');
   }
 
   useEffect(() => {
-    function enableSubmitButton(){
-      let btn = document.getElementById('btn_submit')
-      btn.style.background = '#ffd3ca'
-      if(title && notes){
-        btn.style.background = '#e88f7a'
+    function enableSubmitButton() {
+      let btn = document.getElementById('btn_submit');
+      btn.style.background = '#ffd3ca';
+
+      if (title && notes) {
+        btn.style.background = '#e88f7a';
       }
     }
-    enableSubmitButton()
-  },[title, notes])
-  
+    enableSubmitButton();
+  }, [title, notes]);
+
   return (
     <div id="app">
       <aside>
@@ -74,12 +122,20 @@ function App() {
           </div>
           <button id="btn_submit" type="submit">Salvar</button>
         </form>
-        <RadioButton />
+        <RadioButton
+          selectedValue={selectedValue}
+          handleChange={handleChange}
+        />
       </aside>
       <main>
         <ul>
           {allNotes.map(data => (
-             <Notes data={data} /> 
+            <Notes
+              key={data._id}
+              data={data}
+              handleDelete={handleDelete}
+              handleChangePriority={handleChangePriority}
+            />
           ))}
         </ul>
       </main>

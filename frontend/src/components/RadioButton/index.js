@@ -2,21 +2,36 @@ import React from 'react'
 import './styles.css'
 
 
-function RadioButton(){
-    return(
+function RadioButton({selectedValue, handleChange}) {
+    return (
         <>
             <div className='radioOptions'>
                 <div>
-                    <input type="radio" />
+                    <input
+                        type="radio"
+                        checked={selectedValue === 'all'}
+                        onChange={e => handleChange(e.target)}
+                        value="all"
+                    />
                     <span>Todos</span>
                 </div>
                 <div>
-                    <input type="radio" />
-                    <span>Normal</span>
+                    <input
+                        type="radio"
+                        checked={selectedValue === 'true'}
+                        onChange={e => handleChange(e.target)}
+                        value="true"
+                    />
+                    <span>Prioridade</span>
                 </div>
                 <div>
-                    <input type="radio" />
-                    <span>Prioridade</span>
+                    <input
+                        type="radio"                  
+                        checked={selectedValue === 'false'}
+                        onChange={e => handleChange(e.target)}
+                        value="false"
+                    />
+                    <span>Normal</span>
                 </div>
             </div>
         </>
