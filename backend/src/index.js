@@ -1,12 +1,7 @@
-const express = require('express');
-const routes = require('./routes');
-const cors = require('cors');
+const server = require('./server');
 
-const app = express();
-require('./config/dbConfig');
+const logger = require('./utils/logger');
 
-app.use(cors());
-app.use(express.json());
-app.use(routes);
-
-app.listen(3333);
+server.listen(process.env.PORT, () => {
+  logger.info(`Server is running on port ${process.env.PORT}`)
+});
